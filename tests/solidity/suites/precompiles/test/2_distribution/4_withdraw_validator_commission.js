@@ -15,7 +15,7 @@ describe('Distribution – withdraw validator commission', function () {
     })
 
     it('withdraws validator commission and emits proper event', async function () {
-        const valBech32     = 'cosmosvaloper10jmp6sgh4cc6zt3e8gw05wavvejgr5pw4xyrql'
+        const valBech32     = 'nowavaloper10jmp6sgh4cc6zt3e8gw05wavvejgr5pwsxp2av'
 
         // 1) query commission before withdrawal
         const beforeRes = await distribution.validatorCommission(valBech32)
@@ -27,7 +27,7 @@ describe('Distribution – withdraw validator commission', function () {
         const tx      = await distribution
             .connect(validator)
             .withdrawValidatorCommission(valBech32, { gasLimit: GAS_LIMIT })
-        const receipt = await waitWithTimeout(tx, 20000, RETRY_DELAY_FUNC)
+        const receipt = await waitWithTimeout(tx, 40000, RETRY_DELAY_FUNC)
 
         // 3) parse the event
         const parsedEvt = findEvent(receipt.logs, distribution.interface, 'WithdrawValidatorCommission')

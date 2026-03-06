@@ -3,8 +3,8 @@ const hre = require('hardhat');
 
 describe('Distribution – validator query methods', function () {
     const DIST_ADDRESS = '0x0000000000000000000000000000000000000801';
-    const VAL_OPER_BECH32 = 'cosmosvaloper1cml96vmptgw99syqrrz8az79xer2pcgpqqyk2g';
-    const VAL_BECH32 = 'cosmos1cml96vmptgw99syqrrz8az79xer2pcgp95srxm'
+    const VAL_OPER_BECH32 = 'nowavaloper1cml96vmptgw99syqrrz8az79xer2pcgp9qplhm';
+    const VAL_BECH32 = 'nowa1cml96vmptgw99syqrrz8az79xer2pcgpxfy075'
 
     let distribution, signer;
 

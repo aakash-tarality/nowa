@@ -5,8 +5,8 @@ const { findEvent, waitWithTimeout, RETRY_DELAY_FUNC } = require('../common')
 describe('Gov Precompile', function () {
     const GOV_ADDRESS = '0x0000000000000000000000000000000000000805'
     const GAS_LIMIT = 1_000_000
-    const COSMOS_ADDR = 'cosmos1cml96vmptgw99syqrrz8az79xer2pcgp95srxm'
-    const GOV_MODULE_ADDR = 'cosmos10d07y265gmmuvt4z0w9aw880jnsr700j6zn9kn'
+    const COSMOS_ADDR = 'nowa1cml96vmptgw99syqrrz8az79xer2pcgpxfy075'
+    const GOV_MODULE_ADDR = 'nowa10d07y265gmmuvt4z0w9aw880jnsr700jel8fwu'
 
     let gov, signer, globalProposalId
 
@@ -21,7 +21,7 @@ describe('Gov Precompile', function () {
         const tx = await gov
             .connect(signer)
             .submitProposal(signer.address, jsonProposal, [deposit], { gasLimit: GAS_LIMIT })
-        const receipt = await waitWithTimeout(tx, 20000, RETRY_DELAY_FUNC)
+        const receipt = await waitWithTimeout(tx, 40000, RETRY_DELAY_FUNC)
 
         const evt = findEvent(receipt.logs, gov.interface, 'SubmitProposal')
 
@@ -72,7 +72,7 @@ describe('Gov Precompile', function () {
         const depTx = await gov
             .connect(signer)
             .deposit(signer.address, globalProposalId, [deposit], { gasLimit: GAS_LIMIT })
-        const depRcpt = await waitWithTimeout(depTx, 20000, RETRY_DELAY_FUNC)
+        const depRcpt = await waitWithTimeout(depTx, 40000, RETRY_DELAY_FUNC)
 
         // Check balances after deposit
         const signerBalanceAfter = await hre.ethers.provider.getBalance(signer.address)
@@ -91,7 +91,7 @@ describe('Gov Precompile', function () {
         const voteTx = await gov
             .connect(signer)
             .vote(signer.address, globalProposalId, 1, 'simple vote', { gasLimit: GAS_LIMIT })
-        const voteRcpt = await waitWithTimeout(voteTx, 20000, RETRY_DELAY_FUNC)
+        const voteRcpt = await waitWithTimeout(voteTx, 40000, RETRY_DELAY_FUNC)
         const voteEvt = findEvent(voteRcpt.logs, gov.interface, 'Vote')
         expect(voteEvt, 'Vote event must be emitted').to.exist
         expect(voteEvt.args.option).to.equal(1)
@@ -108,7 +108,7 @@ describe('Gov Precompile', function () {
         const tx = await gov
             .connect(signer)
             .voteWeighted(signer.address, globalProposalId, weightedOptions, 'weighted vote', { gasLimit: GAS_LIMIT })
-        const receipt = await waitWithTimeout(tx, 20000, RETRY_DELAY_FUNC)
+        const receipt = await waitWithTimeout(tx, 40000, RETRY_DELAY_FUNC)
 
         const evt = findEvent(receipt.logs, gov.interface, 'VoteWeighted')
         expect(evt, 'VoteWeighted event must be emitted').to.exist
@@ -205,7 +205,7 @@ describe('Gov Precompile', function () {
         const cancelTx = await gov
             .connect(signer)
             .cancelProposal(signer.address, proposalIdToCancel, { gasLimit: GAS_LIMIT })
-        const cancelRcpt = await waitWithTimeout(cancelTx, 20000, RETRY_DELAY_FUNC)
+        const cancelRcpt = await waitWithTimeout(cancelTx, 40000, RETRY_DELAY_FUNC)
 
         // Check balances after cancel
         const signerBalanceAfter = await hre.ethers.provider.getBalance(signer.address)

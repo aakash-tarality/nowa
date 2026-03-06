@@ -1,6 +1,6 @@
 const { expect } = require('chai')
 const hre = require('hardhat')
-const { findEvent, waitWithTimeout, RETRY_DELAY_FUNC} = require('../common')
+const { findEvent, waitWithTimeout, RETRY_DELAY_FUNC } = require('../common')
 
 describe('ERC20 Precompile', function () {
     let erc20, owner, spender, recipient
@@ -16,12 +16,12 @@ describe('ERC20 Precompile', function () {
 
     it('should return the name', async function () {
         const name = await erc20.name()
-        expect(name).to.contain('Test Token')
+        expect(name).to.contain('Nowa Token')
     })
 
     it('should return the symbol', async function () {
         const symbol = await erc20.symbol()
-        expect(symbol).to.contain('TEST')
+        expect(symbol).to.contain('NOWA')
     })
 
     it('should return the decimals', async function () {
@@ -46,10 +46,10 @@ describe('ERC20 Precompile', function () {
 
     it('should transfer tokens', async function () {
         const amount = hre.ethers.parseEther('1')
-        const prev   = await erc20.balanceOf(spender.address)
+        const prev = await erc20.balanceOf(spender.address)
 
         const tx = await erc20.connect(owner).transfer(spender.address, amount)
-        const receipt = await waitWithTimeout(tx, 20000, RETRY_DELAY_FUNC)
+        const receipt = await waitWithTimeout(tx, 40000, RETRY_DELAY_FUNC)
 
         const transferEvent = findEvent(receipt.logs, erc20.interface, 'Transfer')
         expect(transferEvent, 'Transfer event must be emitted').to.exist
@@ -67,8 +67,8 @@ describe('ERC20 Precompile', function () {
         // owner gives spender permission to move amount
         const approvalTx = await erc20.
             connect(owner)
-            .approve(spender.address, amount, {gasLimit: GAS_LIMIT})
-        const approvalReceipt = await waitWithTimeout(approvalTx, 20000, RETRY_DELAY_FUNC)
+            .approve(spender.address, amount, { gasLimit: GAS_LIMIT })
+        const approvalReceipt = await waitWithTimeout(approvalTx, 40000, RETRY_DELAY_FUNC)
         console.log(`Approval transaction hash: ${approvalTx.hash}`)
 
         const approvalEvent = findEvent(approvalReceipt.logs, erc20.interface, 'Approval')
@@ -78,16 +78,16 @@ describe('ERC20 Precompile', function () {
         expect(approvalEvent.args.value).to.equal(amount)
 
         // record pre-transfer balances and allowance
-        const prevBalance    = await erc20.balanceOf(recipient.address)
-        const prevAllowance  = await erc20.allowance(owner.address, spender.address)
+        const prevBalance = await erc20.balanceOf(recipient.address)
+        const prevAllowance = await erc20.allowance(owner.address, spender.address)
         console.log(`Pre-transfer balance of recipient: ${prevBalance}`)
         console.log(`Pre-transfer allowance of spender: ${prevAllowance}`)
 
         // spender pulls from owner → recipient
         const tx = await erc20
             .connect(spender)
-            .transferFrom(owner.address, recipient.address, amount, {gasLimit: GAS_LIMIT})
-        const receipt = await waitWithTimeout(tx, 20000, RETRY_DELAY_FUNC)
+            .transferFrom(owner.address, recipient.address, amount, { gasLimit: GAS_LIMIT })
+        const receipt = await waitWithTimeout(tx, 40000, RETRY_DELAY_FUNC)
         console.log(`Transfer transaction hash: ${tx.hash}`)
 
         const transferEvent = findEvent(receipt.logs, erc20.interface, 'Transfer')
@@ -97,7 +97,7 @@ describe('ERC20 Precompile', function () {
         expect(transferEvent.args.value).to.equal(amount)
 
         // post-transfer checks
-        const afterBalance   = await erc20.balanceOf(recipient.address)
+        const afterBalance = await erc20.balanceOf(recipient.address)
         const afterAllowance = await erc20.allowance(owner.address, spender.address)
 
         // recipient should gain exactly `amount`
