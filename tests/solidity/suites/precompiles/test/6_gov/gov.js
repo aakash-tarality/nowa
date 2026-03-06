@@ -1,6 +1,6 @@
 const { expect } = require('chai')
 const hre = require('hardhat')
-const { findEvent, waitWithTimeout, RETRY_DELAY_FUNC} = require('../common')
+const { findEvent, waitWithTimeout, RETRY_DELAY_FUNC } = require('../common')
 
 describe('Gov Precompile', function () {
     const GOV_ADDRESS = '0x0000000000000000000000000000000000000805'
@@ -13,10 +13,10 @@ describe('Gov Precompile', function () {
     before(async () => {
         [signer] = await hre.ethers.getSigners()
         gov = await hre.ethers.getContractAt('IGov', GOV_ADDRESS)
-        
+
         // Create a single proposal to be reused across tests
         const jsonProposal = buildProposal(COSMOS_ADDR)
-        const deposit = { denom: 'atest', amount: hre.ethers.parseEther('1') }
+        const deposit = { denom: 'anowa', amount: hre.ethers.parseEther('1') }
 
         const tx = await gov
             .connect(signer)
@@ -24,11 +24,11 @@ describe('Gov Precompile', function () {
         const receipt = await waitWithTimeout(tx, 20000, RETRY_DELAY_FUNC)
 
         const evt = findEvent(receipt.logs, gov.interface, 'SubmitProposal')
-        
+
         if (!evt) {
             throw new Error('SubmitProposal event not found in receipt')
         }
-        
+
         globalProposalId = evt.args.proposalId
         console.log('Global proposal ID created:', globalProposalId.toString())
     })
@@ -39,7 +39,7 @@ describe('Gov Precompile', function () {
             '@type': '/cosmos.bank.v1beta1.MsgSend',
             from_address: GOV_MODULE_ADDR,
             to_address: toCosmos,
-            amount: [{ denom: 'atest', amount: '1' }],
+            amount: [{ denom: 'anowa', amount: '1' }],
         }
 
         const prop = {
@@ -64,7 +64,7 @@ describe('Gov Precompile', function () {
 
     it('deposits on the global proposal', async function () {
         const amt = hre.ethers.parseEther('0.5')
-        const deposit = { denom: 'atest', amount: amt }
+        const deposit = { denom: 'anowa', amount: amt }
 
         // Check balances before deposit
         const signerBalanceBefore = await hre.ethers.provider.getBalance(signer.address)
@@ -133,7 +133,7 @@ describe('Gov Precompile', function () {
     it('queries votes for the global proposal', async function () {
         const pagination = { key: new Uint8Array(), offset: 0, limit: 10, countTotal: true, reverse: false }
         const votesResult = await gov.getVotes(globalProposalId, pagination)
-        
+
         expect(votesResult.votes.length).to.be.greaterThan(0)
         expect(votesResult.votes[0].proposalId).to.equal(globalProposalId)
         expect(votesResult.votes[0].voter).to.equal(signer.address)
@@ -153,13 +153,13 @@ describe('Gov Precompile', function () {
         expect(depositResult.proposalId).to.equal(globalProposalId)
         expect(depositResult.depositor).to.equal(signer.address)
         expect(depositResult.amount.length).to.be.greaterThan(0)
-        expect(depositResult.amount[0].denom).to.equal('atest')
+        expect(depositResult.amount[0].denom).to.equal('anowa')
     })
 
     it('queries all deposits for the global proposal', async function () {
         const pagination = { key: new Uint8Array(), offset: 0, limit: 10, countTotal: true, reverse: false }
         const depositsResult = await gov.getDeposits(globalProposalId, pagination)
-        
+
         expect(depositsResult.deposits.length).to.be.greaterThan(0)
         expect(depositsResult.deposits[0].proposalId).to.equal(globalProposalId)
         expect(depositsResult.deposits[0].depositor).to.equal(signer.address)
@@ -178,10 +178,10 @@ describe('Gov Precompile', function () {
     it('queries all proposals', async function () {
         const pagination = { key: new Uint8Array(), offset: 0, limit: 10, countTotal: true, reverse: false }
         const result = await gov.getProposals(0, signer.address, signer.address, pagination)
-        
+
         expect(result.proposals.length).to.be.greaterThan(0)
         expect(result.pageResponse.total).to.be.greaterThan(0)
-        
+
         const proposal = result.proposals.find(p => p.id === globalProposalId)
         expect(proposal).to.exist
         expect(proposal.proposer).to.equal(signer.address)
@@ -192,28 +192,28 @@ describe('Gov Precompile', function () {
     // TODO: Add multiple depositors case.
     it('cancels a proposal', async function () {
         const proposalIdToCancel = globalProposalId
-        
+
         // Calculate total deposits made (1 ETH initial + 0.5 ETH additional)
         const initialDeposit = hre.ethers.parseEther('1')
         const additionalDeposit = hre.ethers.parseEther('0.5')
         const totalDeposits = initialDeposit + additionalDeposit
         const expectedRefund = totalDeposits / 2n // 50% refund
-        
+
         // Check balances before cancel
         const signerBalanceBefore = await hre.ethers.provider.getBalance(signer.address)
-        
+
         const cancelTx = await gov
             .connect(signer)
-            .cancelProposal(signer.address, proposalIdToCancel, {gasLimit: GAS_LIMIT})
+            .cancelProposal(signer.address, proposalIdToCancel, { gasLimit: GAS_LIMIT })
         const cancelRcpt = await waitWithTimeout(cancelTx, 20000, RETRY_DELAY_FUNC)
 
         // Check balances after cancel
         const signerBalanceAfter = await hre.ethers.provider.getBalance(signer.address)
         const gasFee = cancelRcpt.gasUsed * cancelRcpt.gasPrice
-        
+
         // Verify balance changes (50% refund minus gas fees)
         expect(signerBalanceAfter).to.equal(signerBalanceBefore + expectedRefund - gasFee)
-        
+
         const cancelEvt = findEvent(cancelRcpt.logs, gov.interface, 'CancelProposal')
 
         expect(cancelEvt, 'CancelProposal event must be emitted').to.exist

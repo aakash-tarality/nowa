@@ -81,7 +81,7 @@ func (s *TestSuite) TestGenerateMinGasCoin() {
 			*defaultGasPrice,
 			sdk.DecCoins{sdk.NewDecCoin("test", math.NewInt(1))},
 			sdk.DecCoin{
-				Denom:  "test",
+				Denom:  "nowa",
 				Amount: math.LegacyNewDecFromBigInt(defaultGasPrice.ToInt()),
 			},
 		},

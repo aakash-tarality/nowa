@@ -1,139 +1,118 @@
-<img
-src="repo_header.svg"
-alt="Cosmos EVM - A plug-and-play solution that adds EVM compatibility and customizability to your chain"
-/>
+# Nowa Chain
 
-**Please note**: This repo is undergoing changes while the code is being audited and tested. For the time being we will
-be making v0.x releases. Some breaking changes might occur. Cosmos Labs will only mark the Cosmos EVM repository as stable with a v1
-release after the audit, key stability features and benchmarking are completed.
+**Nowa** is an EVM-compatible Cosmos chain — built for developers who want the full power of Ethereum tooling with the interoperability and modularity of the Cosmos ecosystem.
 
-**Visit the official documentation for Cosmos EVM**: [evm.cosmos.network](https://evm.cosmos.network/)
+Nowa runs on [Cosmos EVM](https://evm.cosmos.network/), giving it native EVM compatibility out of the box: Solidity smart contracts, Ethereum JSON-RPC, MetaMask support, and access to the entire Ethereum developer ecosystem — all while being a fully sovereign Cosmos SDK chain.
 
-## What is Cosmos EVM?
+---
 
-Cosmos EVM is a plug-and-play solution that adds EVM compatibility and customizability to your Cosmos SDK chain. Cosmos EVM equips Cosmos chains with complete Ethereum capabilities: Solidity smart contracts, Ethereum JSON-RPC, native support for the EVM wallet/token/user experience, and access to the entire Ethereum developer ecosystem. Its precompiles and extensions allow developers to leverage modules like [IBC](https://github.com/cosmos/ibc-go) with EVM and get native ERC-20 support for tokens on Cosmos. 
+## What is Nowa?
 
-Cosmos EVM is customizable for your business use case, chain architecture, and performance needs.
+Nowa is a Cosmos chain with full EVM support. It combines:
 
+- **Ethereum compatibility** — Deploy any Solidity contract without modification. Connect any EVM wallet, use any Ethereum dev tool.
+- **Cosmos interoperability** — Native IBC support for cross-chain asset transfers and messaging.
+- **Native token: NOWA** — The chain's native staking and gas token, denominated as `anowa` at the base level (18 decimals, EVM-native).
 
-## Integration
+Nowa is forward-compatible with Ethereum: it runs every valid Ethereum transaction, and adds features that go beyond what standard Ethereum offers.
 
-Cosmos EVM can be integrated into your existing chain
-or added during the development of your upcoming chain launch
-by importing Cosmos EVM as a go module library.
+---
 
-### Robust defaults
+## Features
 
-Cosmos EVM’s modules come out of the box with defaults that enable rapid VM deployment. Integrating all available modules into a blockchain provides:
+- **EVM Smart Contracts** — Full Solidity support. Deploy and interact with contracts exactly as you would on Ethereum.
+- **Ethereum JSON-RPC** — Compatible with MetaMask, Rabby, Blockscout, Hardhat, Foundry, and more.
+- **IBC Integration** — Use any IBC asset inside the EVM via precompiles and extensions.
+- **ERC-20 Module** — Native alignment between IBC assets and ERC-20 tokens for a seamless UX.
+- **EIP-1559 Fee Market** — Self-regulating fee mechanism with configurable surge management.
+- **EIP-712 Signing** — Sign Cosmos SDK messages with EVM wallets like MetaMask.
+- **Governance-controlled** — All modules are controllable via on-chain governance.
+- **Permissioned EVM** *(optional)* — Whitelist or blacklist addresses for contract interaction.
 
-- Exposed JSON-RPC endpoints for connectivity with EVM tooling like wallets such as [MetaMask](https://metamask.io/) and [Rabby](https://rabby.io/), and block explorers like [Blockscout](https://docs.blockscout.com/).
-- EVM extensions that allow functionality that is native to Cosmos SDK modules to be accessible from Solidity smart contracts [Solidity](https://docs.soliditylang.org/en/v0.8.26/) smart contracts.
-- Use of any IBC asset in the EVM.
+---
 
-All modules can be controlled by on-chain governance.
+## Native Token
 
-### Extensive customizability
+| Property | Value |
+|---|---|
+| Name | Nowa Token |
+| Symbol | NOWA |
+| Base denom | `anowa` |
+| Alias | `attonowa` |
+| Exponent | 18 |
+| ERC-20 address | `0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE` |
 
-Based on these robust defaults, the feature set is highly customizable:
+---
 
-- **Permissioned EVM**- Implement customized access controls to either blacklist or whitelist individual addresses for calling and/or creating smart contracts on the network.
-- **EVM Extensions** - Use custom EVM extensions to write custom business logic for your use case.
-- **Single Token Representation v2 & ERC-20 Module** - The Single Token Representation v2 and our `x/erc20` module to aligns IBC and ERC-20 token representation to simplify and improve user experience.
-- **EIP-1559 Fee Market Mechanism** - Customize fee structures and transaction surge management with the self-regulating fee market mechanism based on [EIP-1559 fee market](https://eips.ethereum.org/EIPS/eip-1559).
-- **JSON-RPC Server** - There is full control over the exposed namespaces and [JSON-RPC server](https://cosmos-docs.mintlify.app/docs/api-reference/ethereum-json-rpc). Configurable parameters include custom timeouts for EVM calls or HTTP requests, maximum block gas, open connections, and more.
-- **EIP-712 Signing** - Integrate the [EIP-712 signature](https://eips.ethereum.org/EIPS/eip-712) implementation to allow Cosmos SDK messages to be signed with EVM wallets like MetaMask. This supports structured data signing for arbitrary messages.
-- **Custom Improvement Proposals (Opcodes)** - Any Cosmos EVM user is provided the opportunity to customize bits of their EVM opcodes and add new ones. Read more on [custom operations here](https://cosmos-docs.mintlify.app/docs/documentation/smart-contracts/custom-improvement-proposals#custom-improvement-proposals).
+## Getting Started
 
-## Compatibility with Ethereum
+### Run a local node
 
-Is Cosmos EVM "Ethereum equivalent"? Ethereum-equivalence describes any EVM solution that is identical in transaction execution to the Ethereum client. On the other hand, Ethereum-compatible means that the EVM implementation can run every transaction that is valid on Ethereum, while also handling divergent transactions that are not valid on Ethereum.
+From the root of the repository:
 
-We describe Cosmos EVM as **forward-compatible** with Ethereum. It can run any valid smart contract from Ethereum and also implement new features that are not yet available on the standard Ethereum VM, thus moving the standard forward.
+```bash
+./local_node.sh
+```
 
-## Getting started
+This spins up a local Nowa chain with funded dev accounts (`dev0`–`dev3`) and a validator ready to go.
 
-To run the example `evmd` chain, run the script using `./local_node.sh`
-from the root folder of the repository.
+**Options:**
+
+```
+-y                       Overwrite existing chain data without prompt
+-n                       Keep existing chain data and resume
+--no-install             Skip 'make install'
+--remote-debugging       Build without optimizations (for debuggers)
+--additional-users N     Generate N extra funded accounts (dev4, dev5, ...)
+--mnemonic-file PATH     Path to write generated mnemonics YAML
+--mnemonics-input PATH   Provide custom dev mnemonics from a YAML file
+```
 
 ### Migrations
 
-We provide upgrade guides [here](./docs/migrations) for upgrading your chain from various Cosmos EVM versions.
+Upgrade guides for moving between versions are available in [`./docs/migrations`](./docs/migrations).
 
-### Testing
+---
 
-All test scripts are found in `Makefile` in the root of the repository.
-Listed below are the commands for various tests:
+## Testing
 
-#### Unit Testing
+All test commands are available via `make`. From the root of the repository:
 
 ```bash
+# Unit tests
 make test-unit
-```
 
-#### Coverage Test
-
-This generates a code coverage file `filtered_coverage.txt` and prints out the
-covered code percentage for the working files.
-
-```bash
+# Unit tests with coverage report
 make test-unit-cover
-```
 
-#### Fuzz Testing
-
-```bash
+# Fuzz tests
 make test-fuzz
-```
 
-#### Solidity Tests
-
-```bash
+# Solidity contract tests
 make test-solidity
-```
 
-#### Benchmark Tests
-
-```bash
+# Benchmarks
 make benchmark
 ```
 
+---
 
-## Open-source License & Credits
+## Documentation & Resources
 
-Cosmos EVM is fully open-source under the Apache 2.0 license. It is a fork of [evmOS](https://github.com/evmos/OS). The Interchain Foundation funded [evmOS developers](https://github.com/evmos/OS) Tharsis to open-source the original evmOS codebase.  Tharsis and evmOS performed the foundational work for EVM compatibility and
-interoperability in Cosmos.
+- **Official Cosmos EVM docs**: [evm.cosmos.network](https://evm.cosmos.network/)
+- **Ethereum JSON-RPC reference**: [cosmos-docs.mintlify.app](https://cosmos-docs.mintlify.app/docs/api-reference/ethereum-json-rpc)
+- **Cosmos SDK**: [github.com/cosmos/cosmos-sdk](https://github.com/cosmos/cosmos-sdk)
+- **IBC**: [github.com/cosmos/ibc-go](https://github.com/cosmos/ibc-go)
+- **CometBFT**: [github.com/cometbft/cometbft](https://github.com/cometbft/cometbft)
 
-## Developer Community and Support
+---
 
-The issue list of this repo is exclusively for bug reports and feature requests. We have active, helpful communities on Discord, Telegram, and Slack.
+## Contributing
 
-**| Need Help? | Support & Community: [Discord](https://discord.com/invite/interchain) - [Telegram](https://t.me/CosmosOG) - [Talk to an Expert](https://cosmos.network/interest-form) - [Join the #Cosmos-tech Slack Channel](https://forms.gle/A8jawLgB8zuL1FN36) |**
+Contributions and discussions are welcome. See the [contributing guide](./CONTRIBUTING.md) to get started.
 
+---
 
-## Maintainers
-[Cosmos Labs](https://cosmoslabs.io/) maintains the core components of the stack: Cosmos SDK, CometBFT, IBC, Cosmos EVM, and various developer tools and frameworks. The detailed maintenance policy can be found [here](https://github.com/cosmos/security/blob/main/POLICY.md). In addition to developing and maintaining the Cosmos Stack, Cosmos Labs provides advisory and engineering services for blockchain solutions. [Get in touch with Cosmos Labs](https://www.cosmoslabs.io/contact).
+## License
 
-Cosmos Labs is a wholly-owned subsidiary of the [Interchain Foundation](https://interchain.io/), the Swiss nonprofit responsible for treasury management, funding public goods, and supporting governance for Cosmos.
-
-The Cosmos Stack is supported by a robust community of open-source contributors.
-
-## Contributing to Cosmos EVM
-
-We welcome open source contributions and discussions! For more on contributing, read the [guide](./CONTRIBUTING.md).
-
-### Key Contributors to Cosmos EVM
-
-We would like to thank our key contributors at [B-Harvest](https://bharvest.io/) and 
-[Mantra](https://www.mantrachain.io/) for contributing to and helping us drive the development of Cosmos EVM.
-
-## Documentation and Resources
-
-### Documentation
-Visit the official documentation for Cosmos EVM: [evm.cosmos.network](https://evm.cosmos.network/)
-
-### Cosmos Stack Libraries
-
-- [Cosmos SDK](http://github.com/cosmos/cosmos-sdk) - A framework for building
-  applications in Golang
-- [The Inter-Blockchain Communication Protocol (IBC)](https://github.com/cosmos/ibc-go/) - A blockchain interoperability protocol that allows blockchains to transfer any type of data encoded in bytes.
-- [CometBFT](https://github.com/cometbft/cometbft) - High-performance, 10k+ TPS configurable BFT consensus engine.
+Apache 2.0. Nowa is built on [Cosmos EVM](https://github.com/cosmos/evm), a fork of [evmOS](https://github.com/evmos/OS), originally developed by Tharsis with funding from the Interchain Foundation.

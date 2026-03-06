@@ -1,6 +1,6 @@
 const { expect } = require('chai');
 const hre = require('hardhat');
-const { findEvent, waitWithTimeout, RETRY_DELAY_FUNC} = require('../common');
+const { findEvent, waitWithTimeout, RETRY_DELAY_FUNC } = require('../common');
 
 describe('Distribution – deposit validator rewards pool', function () {
     const DIST_ADDRESS = '0x0000000000000000000000000000000000000801';
@@ -16,7 +16,7 @@ describe('Distribution – deposit validator rewards pool', function () {
     });
 
     it('deposits rewards and emits DepositValidatorRewardsPool event', async function () {
-        const coin = { denom: 'atest', amount: hre.ethers.parseEther('0.1') };
+        const coin = { denom: 'anowa', amount: hre.ethers.parseEther('0.1') };
 
         const beforeRewards = await distribution.validatorOutstandingRewards(VAL_BECH32);
         const beforeCoin = beforeRewards.find(c => c.denom === coin.denom);

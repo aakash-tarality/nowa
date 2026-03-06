@@ -83,8 +83,8 @@ var (
 		},
 		SixDecimalsChainID: {
 			Denom:         "utest",
-			ExtendedDenom: "atest",
-			DisplayDenom:  "test",
+			ExtendedDenom: "anowa",
+			DisplayDenom:  "nowa",
 			Decimals:      evmtypes.SixDecimals.Uint32(),
 		},
 		TwelveDecimalsChainID: {

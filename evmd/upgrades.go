@@ -32,12 +32,12 @@ func (app EVMD) RegisterUpgradeHandlers() {
 				Description: "Example description",
 				DenomUnits: []*banktypes.DenomUnit{
 					{
-						Denom:    "atest",
+						Denom:    "anowa",
 						Exponent: 0,
 						Aliases:  nil,
 					},
 					{
-						Denom:    "test",
+						Denom:    "nowa",
 						Exponent: 18,
 						Aliases:  nil,
 					},
@@ -55,7 +55,7 @@ func (app EVMD) RegisterUpgradeHandlers() {
 			// Ensure that this corresponds to the EVM denom
 			// (tyically the bond denom)
 			evmParams := app.EVMKeeper.GetParams(sdkCtx)
-			evmParams.ExtendedDenomOptions = &types.ExtendedDenomOptions{ExtendedDenom: "atest"}
+			evmParams.ExtendedDenomOptions = &types.ExtendedDenomOptions{ExtendedDenom: "anowa"}
 			err := app.EVMKeeper.SetParams(sdkCtx, evmParams)
 			if err != nil {
 				return nil, err
